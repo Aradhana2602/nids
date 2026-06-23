@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse
 import os
 import joblib
 import pandas as pd
+# import shap
 
 load_dotenv()
 app = FastAPI()
@@ -32,7 +33,7 @@ app.add_middleware(
 # Load model and feature names
 model = joblib.load("models/random_forest.pkl")
 features = joblib.load("models/features.pkl")
-
+# explainer = shap.TreeExplainer(model)
 # Original NSL-KDD column names
 columns = [
     'duration',
@@ -169,6 +170,17 @@ async def upload_csv(file: UploadFile = File(...)):
     predictions = model.predict(
         processed_df
     )
+
+    # attack_indices = processed_df[predictions == 1].index
+
+    # if len(attack_indices) > 0:
+
+    #     sample = processed_df.iloc[[attack_indices[0]]]
+
+    #     shap_values = explainer.shap_values(sample)
+
+    #     print("SHAP GENERATED")
+    #     print(type(shap_values))
 
     attacks = int((predictions == 1).sum())
     normal = int((predictions == 0).sum())
