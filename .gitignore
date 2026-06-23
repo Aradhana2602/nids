@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Models
+models/*.pkl
+
+# Node
+frontend/node_modules/
+
+# Environment Variables
+.env
+.venv/
+frontend/node_modules/
+__pycache__/
+*.pyc
+# VS Code
+.vscode/
+
+# Logs
+*.log
