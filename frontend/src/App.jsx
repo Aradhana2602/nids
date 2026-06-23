@@ -11,7 +11,7 @@ import "./App.css";
 function App() {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
-
+  const API_URL = "https://nids-9si4.onrender.com";
   const [history, setHistory] = useState([]);
 
 
@@ -19,7 +19,7 @@ function App() {
 const fetchHistory = async () => {
   try {
     const response = await axios.get(
-      "http://127.0.0.1:8000/history"
+      `${API_URL}/history`
     );
 
     setHistory(response.data);
@@ -43,7 +43,7 @@ useEffect(() => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/upload-csv",
+        `${API_URL}/upload-csv`,
         formData
       );
 
@@ -58,7 +58,7 @@ useEffect(() => {
   const downloadPDF = async () => {
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8000/generate-report",
+      `${API_URL}/generate-report`,
       result,
       {
         responseType: "blob",
