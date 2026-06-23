@@ -55,6 +55,36 @@ useEffect(() => {
     }
   };
 
+  const downloadPDF = async () => {
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:8000/generate-report",
+      result,
+      {
+        responseType: "blob",
+      }
+    );
+
+    const url = window.URL.createObjectURL(
+      new Blob([response.data])
+    );
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "nids_report.pdf";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+  } catch (error) {
+    console.error(error);
+    alert("PDF download failed");
+  }
+};
+
   return (
     <div className="container">
       <h1>AI Powered Network Intrusion Detection <hr></hr>System</h1>
@@ -120,11 +150,19 @@ useEffect(() => {
       )}
 
       {result && (
-  <Charts
-    attacks={result.attacks}
-    normal={result.normal}
-    attackPercentage={result.attack_percentage}
-  />
+  <>
+    <Charts
+      attacks={result.attacks}
+      normal={result.normal}
+      attackPercentage={result.attack_percentage}
+    />
+
+    <br />
+
+    <button onClick={downloadPDF}>
+      Download PDF Report
+    </button>
+  </>
 )}
  <History history={history} />
  

@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 from datetime import datetime
 from dotenv import load_dotenv
+from reportlab.pdfgen import canvas
+from fastapi.responses import FileResponse
 import os
 import joblib
 import pandas as pd
@@ -113,6 +115,15 @@ def preprocess(df):
 class TrafficData(BaseModel):
     data: list[float]
 
+# Schema for PDF report generation
+class ReportData(BaseModel):
+    filename: str
+    total_records: int
+    attacks: int
+    normal: int
+    attack_percentage: float
+    risk_level: str
+
 
 @app.get("/")
 def home():
@@ -208,3 +219,38 @@ def get_history():
     )
 
     return records
+
+@app.post("/generate-report")
+def generate_report(data: ReportData):
+
+    pdf_file = "nids_report.pdf"
+
+    c = canvas.Canvas(pdf_file)
+
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(100, 800, "AI-Powered NIDS Report")
+
+    c.setFont("Helvetica", 12)
+
+    c.drawString(100, 760, f"Filename: {data.filename}")
+    c.drawString(100, 730, f"Total Records: {data.total_records}")
+    c.drawString(100, 700, f"Attacks: {data.attacks}")
+    c.drawString(100, 670, f"Normal: {data.normal}")
+    c.drawString(
+        100,
+        640,
+        f"Attack Percentage: {data.attack_percentage}%"
+    )
+    c.drawString(
+        100,
+        610,
+        f"Risk Level: {data.risk_level}"
+    )
+
+    c.save()
+
+    return FileResponse(
+        pdf_file,
+        media_type="application/pdf",
+        filename="nids_report.pdf"
+    )
