@@ -354,8 +354,6 @@ Army Institute of Technology, Pune
 GitHub:
 https://github.com/Aradhana2602
 
-LinkedIn:
-(Add Your LinkedIn URL)
 
 ---
 
